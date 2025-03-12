@@ -1,4 +1,5 @@
-playConsoleGame();
+// playConsoleGame();
+ScreenController();
 
 function playConsoleGame() {
   const gameController = GameController();
@@ -136,7 +137,23 @@ function GameController(player1 = 'P1', player2 = 'P2') {
   }
 }
 
-function ScreenControler(player1 = 'P1', player2 = 'P2') {
+// Event delegation
+function ScreenController() {
+  const gameController = GameController();
+  const container = document.querySelector('div.container');
+  updateScreen();
 
+  function updateScreen() {
+    const board = gameController.getGameState().currentBoard;
+    for (const slot of board) {
+      const div = document.createElement('div');
+      div.classList = 'slot';
+      const p = document.createElement('p');
+      p.classList = 'slot-text';
+      p.textContent = slot;
+      div.appendChild(p);
+      container.appendChild(div);
+    }
+  }
 
 }
