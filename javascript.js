@@ -5,7 +5,7 @@ function Gameboard() {
   const board = Array(9).fill(null);
 
   function addMark(index, { token }) {
-    if (index > 9 || index < 0 && board[index] === null) {
+    if (index < 9 && index >= 0 && board[index] === null) {
       board[index] = token;
       return true;
     }
@@ -88,7 +88,6 @@ function Gameboard() {
 
 function GameController(player1 = "P1", player2 = "P2") {
   let gameStatus = 'running';
-  let turn = 0;
   const board = Gameboard();
   const players = [
     {
@@ -105,40 +104,35 @@ function GameController(player1 = "P1", player2 = "P2") {
   console.log(`It is ${currentPlayer.name}'s turn\n`);
   board.printBoard();
 
-  const getCurrentPlayer = () => ({ ...currentPlayer });
-  const getBoard = () => board.getBoard();
-  const getGameStatus = () => gameStatus;
+  function getBoard() {
+    return board.getBoard();
+  }
   
   function switchPlayers() {
     currentPlayer = (currentPlayer === players[0]) ? players[1] : players[0];
   }
 
   function playRound(index) {
-    if (gameStatus !== 'running') {
-      return;
-    }
-    const isValidIndex = board.addMark(index, currentPlayer);
-    if (isValidIndex) {
-      ++turn;
+    if (gameStatus === 'running' && board.addMark(index, currentPlayer)) {
+      const boardIsFull = !getBoard().includes(null)
       if (board.checkWin(index, currentPlayer)) {
-        console.log("YOU DID IT");
-        board.printBoard();
         gameStatus = 'win';
-      } else if (turn === 9) {
+      } else if (boardIsFull) {
         gameStatus = 'tie';
       } else {
         switchPlayers();
         console.log(`It is ${currentPlayer.name}'s turn\n`);
-        board.printBoard();
       }
+    }
+    return {
+      gameState: gameStatus,
+      currentPlayer: currentPlayer.name,
     }
   }
 
   return {
     playRound,
-    getCurrentPlayer,
     getBoard,
-    getGameStatus,
   }
 }
 
