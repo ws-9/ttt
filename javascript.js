@@ -1,41 +1,27 @@
-function Gameboard() {
-  const board = [];
-  const boardIndices = [];
+const gameController = GameController();
 
-  for (let i = 0; i < 9; ++i) {
-    board.push(i);
-    boardIndices.push(i);
-  }
+
+function Gameboard() {
+  const board = Array(9).fill(null);
 
   function addMark(index, { token }) {
-
-    if (index > 9 || index < 0) {
-      return null;
-    }
-    if (boardIndices.includes(board[index])) {
+    if (index > 9 || index < 0 && board[index] === null) {
       board[index] = token;
       return true;
-    } else {
-      return false; 
     }
+    return false;
   }
 
   function printBoard() {
-    console.log(board[0] + ' ' + board[1] + ' ' + board[2]);
-    console.log(board[3] + ' ' + board[4] + ' ' + board[5]);
-    console.log(board[6] + ' ' + board[7] + ' ' + board[8]);
+    console.log(
+        `${board[0] || 0} ${board[1] || 1} ${board[2] || 2}\n` +
+        `${board[3] || 3} ${board[4] || 4} ${board[5] || 5}\n` +
+        `${board[6] || 6} ${board[7] || 7} ${board[8] || 8}`
+    );
   }
 
   function getBoard() {
-    return board;
-  }
-
-  function getValue(index) {
-    if (index > 9 || index < 0) {
-      return null;
-    } else {
-      return board[index];
-    }
+    return [...board];
   }
 
   function checkWin(index, { token }) {
@@ -94,7 +80,6 @@ function Gameboard() {
 
   return {
     addMark,
-    getValue,
     getBoard,
     printBoard,
     checkWin,
@@ -120,9 +105,9 @@ function GameController(player1 = "P1", player2 = "P2") {
   console.log(`It is ${currentPlayer.name}'s turn\n`);
   board.printBoard();
 
-  const getCurrentPlayer = () => currentPlayer;
-  const getBoard = () => [...board.getBoard()];
-  const getGameStatus = () => gameStatus.slice(0);
+  const getCurrentPlayer = () => ({ ...currentPlayer });
+  const getBoard = () => board.getBoard();
+  const getGameStatus = () => gameStatus;
   
   function switchPlayers() {
     currentPlayer = (currentPlayer === players[0]) ? players[1] : players[0];
@@ -157,4 +142,3 @@ function GameController(player1 = "P1", player2 = "P2") {
   }
 }
 
-board = GameController();
