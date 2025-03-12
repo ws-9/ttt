@@ -1,6 +1,6 @@
-playGame();
+playConsoleGame();
 
-function playGame() {
+function playConsoleGame() {
   const gameController = GameController();
 
   let gameState = gameController.getGameState();
@@ -55,23 +55,27 @@ function Gameboard() {
     const threeInARow = token.repeat(3);
     for (let i = 0; i < 3; i += 3) {
       const rowHasNoEmptySlots = board[i] && board[i + 1] && board[i + 2];
-      const rowIsFilledWithSameToken = (board[i] + board[i + 1] + board[i + 2]) === threeInARow;
+      const rowIsFilledWithSameToken =
+          (board[i] + board[i + 1] + board[i + 2]) === threeInARow;
       if (rowHasNoEmptySlots && rowIsFilledWithSameToken) {
         return true;
       }
     }
     for (let i = 0; i < 3; ++i) {
       const colHasNoEmptySlots = board[i] && board[i + 3] && board[i + 6];
-      const colIsFilledWithSameToken = (board[i] + board[i + 3] + board[i + 6]) === threeInARow;
+      const colIsFilledWithSameToken =
+          (board[i] + board[i + 3] + board[i + 6]) === threeInARow;
       if (colHasNoEmptySlots && colIsFilledWithSameToken) {
         return true;
       }
     }
-    if (board[0] && board[4] && board[8] && (board[0] + board[4] + board[8]) === threeInARow) {
+    if (board[0] && board[4] && board[8] &&
+        (board[0] + board[4] + board[8]) === threeInARow) {
       return true;
     }
 
-    if (board[2] && board[4] && board[6] && (board[2] + board[4] + board[6]) === threeInARow) {
+    if (board[2] && board[4] && board[6] &&
+        (board[2] + board[4] + board[6]) === threeInARow) {
       return true;
     }
 
@@ -132,3 +136,7 @@ function GameController(player1 = 'P1', player2 = 'P2') {
   }
 }
 
+function ScreenControler(player1 = 'P1', player2 = 'P2') {
+
+
+}
