@@ -54,7 +54,7 @@ function Gameboard() {
   
   function checkWin({ token }) {
     const threeInARow = token.repeat(3);
-    for (let i = 0; i < 3; i += 3) {
+    for (let i = 0; i < 3 * 3; i += 3) {
       const rowHasNoEmptySlots = board[i] && board[i + 1] && board[i + 2];
       const rowIsFilledWithSameToken =
           (board[i] + board[i + 1] + board[i + 2]) === threeInARow;
@@ -141,19 +141,48 @@ function GameController(player1 = 'P1', player2 = 'P2') {
 function ScreenController() {
   const gameController = GameController();
   const container = document.querySelector('div.container');
+  const header = document.querySelector('.game-status > p');
+  let gameState = gameController.getGameState();
+  header.textContent = `It is currently ${gameState.currentPlayer}'s turn!`;
   updateScreen();
-
+  
+  container.addEventListener('click', delegatedEventHandler);
   function updateScreen() {
     const board = gameController.getGameState().currentBoard;
-    for (const slot of board) {
+    container.replaceChildren();
+    for (let i = 0; i < board.length; ++i) {
       const div = document.createElement('div');
+      div.id = i;
       div.classList = 'slot';
       const p = document.createElement('p');
       p.classList = 'slot-text';
-      p.textContent = slot;
+      p.textContent = board[i];
       div.appendChild(p);
       container.appendChild(div);
     }
   }
+  
+  function delegatedEventHandler(event) {
+    const selectedIndex = Number(event.target.id);
+    if ([...event.target.classList].includes('container')) {
+      return;
+    }
+    if (!gameController.playRound(selectedIndex)) {
+      return;
+    }
 
+    gameState = gameController.getGameState();
+    header.textContent = `It is currently ${gameState.currentPlayer}'s turn!`;
+    switch (gameState.gameStatus) {
+      case 'win':
+        header.textContent = `${gameState.currentPlayer} won!`;
+        break;
+      case 'tie':
+        header.textContent = 'It\'s a tie!';
+        break;
+      default:
+        break;
+    }
+    updateScreen()
+  }
 }
